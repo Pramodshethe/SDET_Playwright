@@ -17,9 +17,20 @@ def pytest_addoption(parser):
         "--url_link", action="store", default="url", help="server selection"
     )
 
-@pytest.fixture(scope="session", params=creds_data)
-def user_credentials(request):
+#@pytest.fixture(scope="session", params=creds_data)
+#def user_credentials(request):
+#    return request.param
+
+@pytest.fixture(params=[c for c in creds_data if c.get("type") == "valid"])
+def valid_user(request):
+    """Feeds only valid dictionaries to a test."""
     return request.param
+
+@pytest.fixture(params=[c for c in creds_data if c.get("type") == "invalid"])
+def invalid_user(request):
+    """Feeds only invalid dictionaries to a test."""
+    return request.param
+
 
 @pytest.fixture(scope="session")
 def browser_type(playwright: Playwright, request):
@@ -28,13 +39,14 @@ def browser_type(playwright: Playwright, request):
         browser = playwright.chromium.launch(headless=False)
     elif browser_name == 'firefox':
         browser = playwright.firefox.launch(headless=False)
-
+    print("Opening Browser")
     yield browser
     browser.close()
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def browser_instance(browser_type):
     context = browser_type.new_context()
     page = context.new_page()
+    print("New context")
     yield page
     context.close()

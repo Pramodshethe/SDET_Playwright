@@ -1,6 +1,15 @@
 {
-  "user_creds": [{
-    "username": "admin94@gmail.com",
-    "Password":"admin94@gmail.com"
-  }]
+  "user_creds": [
+    {
+      "type": "valid",
+      "username": "admin94@gmail.com",
+      "Password":"admin94@gmail.com"
+    },
+    {
+      "type": "invalid",
+      "username": "admin94@gmail.com",
+      "Password":"invalidpass"
+    }
+
+  ]
 }
